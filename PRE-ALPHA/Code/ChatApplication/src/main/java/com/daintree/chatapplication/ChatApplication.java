@@ -1,8 +1,16 @@
 package com.daintree.chatapplication;
 
-public class ChatApplication {
 
+import Client.ChatGUI;
+import Client.ChatLoginGUI;
+
+public class ChatApplication {
+    
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        ChatGUI chatPage = new ChatGUI();
+        chatPage.frame.setVisible(true);
+        
+        ChatLoginGUI chatLogin = new ChatLoginGUI();
+        chatLogin.frame.setVisible(true);
     }
 }
