@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,14 +28,19 @@ public class ChatLoginGUI {
     private JLabel newUsers;
     private JButton register;
     
-    public int visible = 1;
+    private Runnable onLoginSuccess;
+    private Runnable onRegisterChange;
+    
 
-    public int returnState() {
-        return visible;
+    public void setOnLoginSuccess(Runnable onLoginSuccess) {
+        this.onLoginSuccess = onLoginSuccess;
+    }    
+
+    public void setOnRegisterChange(Runnable onRegisterChange) {
+        this.onRegisterChange = onRegisterChange;
     }
     
     public ChatLoginGUI() {
-            
 
         
         frame = new JFrame(); // evita vincular classe a um JFrame
@@ -98,7 +101,13 @@ public class ChatLoginGUI {
         chat = new JButton("Chat");
         chat.setBounds(60,190,70,20);
         panelBottom.add(chat);
-        chat.addActionListener(e -> { this.frame.setVisible(false); visible = 0;});
+        chat.addActionListener(e -> { 
+            if (onLoginSuccess != null){
+                onLoginSuccess.run();
+                
+            } 
+            frame.dispose();
+        });
 
         newUsers = new JLabel("For new users:");
         newUsers.setBounds(260, 150, 120, 20);
@@ -106,10 +115,11 @@ public class ChatLoginGUI {
         
         register = new JButton("Register");
         register.setBounds(260,180,110,20);
-        register.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("");
+        register.addActionListener(e -> {
+            if (onRegisterChange != null) {
+                onRegisterChange.run();
             }
+            frame.dispose();
         });
         
         panelBottom.add(register);

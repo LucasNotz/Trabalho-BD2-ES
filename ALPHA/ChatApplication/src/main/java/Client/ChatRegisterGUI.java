@@ -30,6 +30,11 @@ public class ChatRegisterGUI {
     private JLabel toLogin;
     private JButton loginButton;
     
+    private Runnable onLoginChange;
+    
+    public void setOnLoginChange(Runnable onLoginChagne) {
+        this.onLoginChange = onLoginChange;
+    }
     
     public ChatRegisterGUI() {
         frame = new JFrame(); //base frame
@@ -74,12 +79,7 @@ public class ChatRegisterGUI {
         registerNameInput =  new JTextField();
         registerNameInput.setBounds(30,40, 200, 20);
         panelBottom.add(registerNameInput);
-        registerNameInput.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("");
-            }
-        });
-        
+
         panelBottom.add(registerNameInput);
         
         registerPass =  new JLabel("New Password:");
@@ -88,18 +88,14 @@ public class ChatRegisterGUI {
         
         registerPassInput =  new JTextField();
         registerPassInput.setBounds(30, 120, 200, 20);
-        registerPassInput.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent d) {
-                System.out.println("");
-            }
-        });
+
         panelBottom.add(registerPassInput);
         
         registerButton = new JButton("Register");
         registerButton.setBounds(80,160,100,20);
         registerButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent s) {
-                System.out.println("Register button pressed");
+            public void actionPerformed(ActionEvent k) {
+                System.out.println("register button pressed");
             }
         });
         panelBottom.add(registerButton);
@@ -110,12 +106,13 @@ public class ChatRegisterGUI {
         
         loginButton = new JButton("Go to login");
         loginButton.setBounds(240,200,120,20);
-        loginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent k) {
-                System.out.println("Back to login button pressed");
+        loginButton.addActionListener(c -> {
+            if (onLoginChange != null) {
+                onLoginChange.run();
             }
+            frame.setVisible(false);
+            
         });
-        
         panelBottom.add(loginButton);
         
         frame.add(panelTop, BorderLayout.CENTER);
