@@ -9,10 +9,10 @@ public class ChatApplication {
     
     public static void main(String[] args) {
         ChatGUI chatPage = new ChatGUI();
-        chatPage.frame.setVisible(false);
+        chatPage.frame.setVisible(true);
         
         ChatLoginGUI chatLogin = new ChatLoginGUI();
-        chatLogin.frame.setVisible(false);
+        chatLogin.frame.setVisible(true);
         
         ChatRegisterGUI chatRegister = new ChatRegisterGUI();
         chatRegister.frame.setVisible(true);
