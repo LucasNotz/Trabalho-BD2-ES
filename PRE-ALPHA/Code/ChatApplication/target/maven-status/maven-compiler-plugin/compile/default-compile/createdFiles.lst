@@ -4,6 +4,7 @@ Client/ChatRegisterGUI.class
 Client/ChatLoginGUI$3.class
 Client/ChatLoginGUI$5.class
 Server/ChatServer.class
+Client/ChatRegisterGUI$1.class
 Client/ChatLoginGUI$1.class
 com/daintree/chatapplication/ChatApplication.class
 Client/ChatClient.class
