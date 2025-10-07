@@ -16,8 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 //essa classe contém o código para inicializar o GUI do cliente
 public class Chat_Application extends JFrame {
-    //informações da class
-  
+    //variáveis da classe
     private JTextArea messageArea;
     private JTextField textField;
     private JButton exitButton;
@@ -32,6 +31,7 @@ public class Chat_Application extends JFrame {
         super("Chat Application");
         setSize(400, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
 
         //bloco de código que define "presets" para futuras decisões estilísticas
         Color backgroundColor = new Color(240, 240, 240);
@@ -62,6 +62,9 @@ public class Chat_Application extends JFrame {
 
           //bloco de código responsável por resgatar a mensagem escrita no textField, formatar e atribuir
           // a uma variável e mandar isso 
+          
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // java automatically fires actionlistener when enter is pressed
         textField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String message = "[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + name + ": "
@@ -69,34 +72,46 @@ public class Chat_Application extends JFrame {
                 //invoca método de ChatClient .sendMessage(String msg) que faz:out.println(msg)
                 //que envia a mensagem pelo socket, já que out é um printwriter connectado a um socket
                 //por meio de socketl.getOutoputStream()
-                
-
                 client.sendMessage(message);
+                //limpa o textfield
                 textField.setText("");
             }
         });
+        //bloco de código do botão de sair
         exitButton = new JButton("Exit");
         exitButton.setFont(buttonFont);
         exitButton.setBackground(buttonColor);
         exitButton.setForeground(Color.WHITE);
+        //funcianlidade do botão
         exitButton.addActionListener(e -> {
             String departureMessage = name + " has left the chat.";
+            //envia para o servidor a mensagem de que saiu
             client.sendMessage(departureMessage);
             try {
+                //atrasa o tempo de fechamento do thread a fim de permitir que a mensagem saia antes
                 Thread.sleep(1000);
             } catch (InterruptedException ie) {
+                //se o for fechado o "window" antes de enviar a mensagem o thread fecha automaticamente
                 Thread.currentThread().interrupt();
             }
+            //fecha o programa
             System.exit(0);
         });
 
+        //bloco de código do panel, que contém o textfield e o exitbutton
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBackground(backgroundColor);
         bottomPanel.add(textField, BorderLayout.CENTER);
         bottomPanel.add(exitButton, BorderLayout.EAST);
         add(bottomPanel, BorderLayout.SOUTH);
+        
+        //inicialização do cliente
+            //ip address, port & omMessageReceived
         try {
+            //cria uma objeto do chatclient que é responsável por receber e enviar mensagens para e do servidor
+                //this::onMessageReceived -> utilize esse método que recebe uma string e faz alguma coisa
             this.client = new ChatClient("127.0.0.1", 5000, this::onMessageReceived);
+            //inicializa o cliente
             client.startClient();
         } catch (IOException e) {
             e.printStackTrace();
@@ -105,13 +120,20 @@ public class Chat_Application extends JFrame {
             System.exit(1);
         }
     }
-
+    //método da interface consumer
+        //Mostra a mensagen no chat GUI
     private void onMessageReceived(String message) {
+        //SwingUtilites -> utility class to deal with event handling aka updates on screen
+        //uses Event Dispatch Thread -> one thread to handle all swing events
+        //not thread safe, so invoke later asks it to do it as soon as possible as to not
+        //crash the screen
         SwingUtilities.invokeLater(() -> messageArea.append(message + "\n"));
     }
 
     public static void main(String[] args) {
+        //thread safe way to create user on server
         SwingUtilities.invokeLater(() -> {
+            //create user 
             new Chat_Application().setVisible(true);
         });
     }
